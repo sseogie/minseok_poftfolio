@@ -186,10 +186,10 @@
     /* diagonal line */
     .hero-line {
       position: absolute;
-      left: 52px;
-      top: 73px;
-      width: calc(100% - 104px);
-      aspect-ratio: 1336 / 486;
+      left: 2.78%;
+      top: 8.22%;
+      width: 94.44%;
+      height: 77.9%;
       pointer-events: none;
     }
 
@@ -667,9 +667,52 @@
       /* cursor off on touch */
       .cursor { display: none; }
     }
+
+    /* ── LOADING INTRO (INTRO 0–10 SEQUENCE) ── */
+    #intro {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0a0a0a; overflow: hidden;
+      transition: opacity 1.5s ease;
+    }
+    #intro.hide { opacity: 0; pointer-events: none; }
+    #introSvg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .intro-tri { fill: #d9d9d9; }
+    .intro-outline {
+      position: absolute;
+      left: 2.78%; top: 8.22%;
+      width: 94.44%; height: 77.9%;
+      opacity: 0; pointer-events: none;
+    }
+    .intro-word {
+      position: absolute;
+      font-family: 'Outfit', sans-serif; font-weight: 600; color: #fff;
+      font-size: min(24vw, 40vh); line-height: 0.82; letter-spacing: -0.03em;
+      opacity: 0; pointer-events: none;
+    }
+    .intro-word.w-point { top: 2%;  left: 1.5%; }
+    .intro-word.w-of    { bottom: 3%; right: 2.5%; }
+    .intro-word.w-view  { top: 2%;  left: 1.5%; }
   </style>
 </head>
 <body>
+
+  <!-- Loading Intro (INTRO 0 → 10 triangle sequence) -->
+  <div id="intro">
+    <svg id="introSvg" viewBox="0 0 1440 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="intro-tri" data-i="0" points="40,900 296,900 168,900"/>
+      <polygon class="intro-tri" data-i="1" points="316,900 572,900 444,900"/>
+      <polygon class="intro-tri" data-i="2" points="592,900 848,900 720,900"/>
+      <polygon class="intro-tri" data-i="3" points="868,900 1124,900 996,900"/>
+      <polygon class="intro-tri" data-i="4" points="1144,900 1400,900 1272,900"/>
+    </svg>
+    <!-- final outline: identical position/size to the hero triangle line -->
+    <svg class="intro-outline" id="introOutline" viewBox="0 0 1336 486" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,0 1336,0 1336,486" stroke="rgba(255,255,255,0.55)" stroke-width="0.8" fill="none"/>
+    </svg>
+    <span class="intro-word w-point" id="wPoint">POINT</span>
+    <span class="intro-word w-of"    id="wOf">OF</span>
+    <span class="intro-word w-view"  id="wView">VIEW</span>
+  </div>
 
   <!-- Cursor -->
   <div class="cursor" id="cursor"></div>
@@ -699,7 +742,7 @@
     <h1 class="hero-title reveal reveal-delay-1">Point <em>of View</em></h1>
     <p class="hero-subtitle reveal reveal-delay-2">"문제를 나의 관점과 사용자의 시야를 더해 해결하다"</p>
     <div class="hero-actions reveal reveal-delay-3">
-      <a href="portfolio_kimminseok.pdf" class="btn-primary" download="portfolio_kimminseok.pdf">
+      <a href="포트폴리오_김민석.pdf" class="btn-primary" download="포트폴리오_김민석.pdf">
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M3 6l4 4 4-4M1 11h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         DOWNLOAD PDF
       </a>
@@ -708,7 +751,6 @@
         <svg width="22" height="14" viewBox="0 0 24 12" fill="none"><path d="M0 6h22M17 1l5 5-5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
-    <div class="hero-scroll-hint">SCROLL</div>
   </section>
 
   <div class="section-divider"></div>
@@ -985,6 +1027,89 @@
       });
     }, { threshold: 0.1 });
     reveals.forEach(el => observer.observe(el));
+
+
+    // ── Loading Intro: INTRO 0→10 timeline (faster; crossfade into hero line) ──
+    (function () {
+      var svg  = document.getElementById('introSvg');
+      var intro= document.getElementById('intro');
+      if (!svg) return;
+      var tris = [].slice.call(svg.querySelectorAll('.intro-tri'));
+      var outline = document.getElementById('introOutline');
+      var wPoint = document.getElementById('wPoint');
+      var wOf    = document.getElementById('wOf');
+      var wView  = document.getElementById('wView');
+      var X = [40, 316, 592, 868, 1144], W = 256;
+
+      function OFF(i){ var x=X[i]; return [[x,900],[x+W,900],[x+W/2,900]]; }
+      function A(i){ var x=X[i]; return [[x,900],[x+W,900],[x+W/2,425]]; }
+      function B(i){ var x=X[i]; return [[x,475],[x+W,475],[x+W/2,0]]; }
+      function C(i){ var x=X[i]; return [[x,355],[x+W,355],[x+W,830]]; }
+      function D(i){ var x=X[i]; return [[x,74],[x+W,74],[x+W,775]]; }
+      function E(i){ return [[40,74],[1400,74],[1400,775]]; }
+
+      var SEG = [
+        {t:0,    f:OFF},
+        {t:550,  f:A},   {t:820,  f:A},
+        {t:1380, f:B},   {t:1650, f:B},
+        {t:2210, f:C},   {t:2480, f:C},
+        {t:3040, f:D},   {t:3310, f:D},
+        {t:3950, f:E},   {t:4300, f:E}
+      ];
+      var KT = SEG.map(function(s){ return s.t; });
+      var SF = SEG.map(function(s){ return s.f; });
+      var END = KT[KT.length-1];   // merged triangle settled
+      var STAGGER = 70;
+      var XF = 650;                // crossfade duration (merged fill -> outline)
+
+      function easeIO(t){ return t<0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+      function lerp(a,b,u){ return a+(b-a)*u; }
+
+      function ptsFor(i, t){
+        if (t <= KT[0]) return SF[0](i);
+        if (t >= END)   return SF[SF.length-1](i);
+        var seg = 0;
+        for (var k=0;k<KT.length-1;k++){ if (t>=KT[k]) seg=k; }
+        var span = KT[seg+1]-KT[seg];
+        var u = span>0 ? easeIO((t-KT[seg])/span) : 1;
+        var p0 = SF[seg](i), p1 = SF[seg+1](i);
+        return p0.map(function(pt,idx){ return [lerp(pt[0],p1[idx][0],u), lerp(pt[1],p1[idx][1],u)]; });
+      }
+      function toStr(pts){ return pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(' '); }
+      function env(t, inS, inE, outS, outE){
+        if (t<inS || t>outE) return 0;
+        if (t<inE)  return (t-inS)/(inE-inS);
+        if (t<outS) return 1;
+        return 1 - (t-outS)/(outE-outS);
+      }
+
+      var start = null;
+      function frame(now){
+        if (start===null) start = now;
+        var t = now - start;
+        for (var i=0;i<tris.length;i++){
+          var lt = t - i*STAGGER; if (lt<0) lt=0;
+          tris[i].setAttribute('points', toStr(ptsFor(i, lt)));
+        }
+        // crossfade the merged filled triangle into the real hero-line outline
+        var xf = Math.max(0, Math.min(1, (t - END) / XF));
+        for (var j=0;j<tris.length;j++){ tris[j].style.fillOpacity = (1 - xf); }
+        outline.style.opacity = xf;
+        wPoint.style.opacity = env(t,  380,  700, 1150, 1380);
+        wOf.style.opacity    = env(t, 1200, 1500, 1980, 2210);
+        wView.style.opacity  = env(t, 2030, 2330, 2810, 3040);
+        if (t < END + XF + 200) requestAnimationFrame(frame);
+      }
+
+      window.addEventListener('load', function(){
+        requestAnimationFrame(frame);
+        // hold on the outline, then gently lift the black into the identical hero line
+        setTimeout(function(){
+          intro.classList.add('hide');
+          setTimeout(function(){ intro.style.display = 'none'; }, 1500);
+        }, END + XF + 350);
+      });
+    })();
 
     // Hero elements trigger immediately
     document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('visible'));
