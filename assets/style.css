@@ -94,6 +94,7 @@ footer .curio { display: block; flex: none; width: 25px; height: 22px; }
 .p-head .sub { margin: 0; font-size: 17px; line-height: 1.6; }
 .p-head .meta { margin: 12px 0 0; color: var(--mute); font-size: 14px; line-height: 1.6; }
 .p-hero img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--ph); }
+.p-hero.natural img { aspect-ratio: auto; height: auto; object-fit: initial; }
 .p-text { display: grid; grid-template-columns: 1fr; gap: 40px; padding-block: 64px; }
 .p-text h3 { font-size: 13px; font-weight: 500; color: var(--mute); margin: 0 0 16px; }
 .p-text p { margin: 0 0 1em; max-width: 36em; line-height: 1.8; }
