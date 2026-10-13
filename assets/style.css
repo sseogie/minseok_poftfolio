@@ -67,7 +67,7 @@ header.top nav a[aria-current="page"] { font-weight: 600; text-decoration: under
 .list .tt { font-weight: 500; line-height: 1.5; }
 .list .sb { color: var(--mute); font-size: 14px; line-height: 1.5; margin-top: 2px; }
 .about-intro { padding-block: 24px 64px; }
-.about-intro p { margin: 0 0 15px; font-size: 15px; line-height: 1.75; }
+.about-intro p { margin: 0 0 10px; font-size: 15px; line-height: 1.75; font-weight: 500; }
 .about-intro p:last-child { margin-bottom: 0; }
 .cv { display: grid; grid-template-columns: 1fr; gap: 24px 40px; }
 .cv > div { min-width: 0; }
