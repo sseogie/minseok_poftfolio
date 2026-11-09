@@ -14,3 +14,10 @@
   var y = document.querySelector('[data-year]');
   if (y) y.textContent = new Date().getFullYear();
 })();
+
+/* 이미지 저장 방지(우클릭·드래그 차단). img만 대상, 캔버스 인터랙션은 유지 */
+(function () {
+  function isImg(e) { return e.target && e.target.tagName === "IMG"; }
+  document.addEventListener("contextmenu", function (e) { if (isImg(e)) e.preventDefault(); });
+  document.addEventListener("dragstart", function (e) { if (isImg(e)) e.preventDefault(); });
+})();
